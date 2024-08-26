@@ -137,7 +137,7 @@ jobs:
       working-directory: eks
       run: terraform apply -auto-approve -var-file=${{ github.ref == 'refs/heads/main' && 'prod.tfvars' || github.ref == 'refs/heads/staging' && 'staging.tfvars' || 'dev.tfvars' }} -input=false
 
-    - name: Terraform Destroy
-      if: ${{ github.event.inputs.action == 'destroy' }}
-      working-directory: eks
-      run: terraform destroy -auto-approve -var-file=${{ github.ref == 'refs/heads/main' && 'prod.tfvars' || github.ref == 'refs/heads/staging' && 'staging.tfvars' || 'dev.tfvars' }} -input=false
+    # - name: Terraform Destroy
+    #   if: ${{ github.event.inputs.action == 'destroy' }}
+    #   working-directory: eks
+    #   run: terraform destroy -auto-approve -var-file=${{ github.ref == 'refs/heads/main' && 'prod.tfvars' || github.ref == 'refs/heads/staging' && 'staging.tfvars' || 'dev.tfvars' }} -input=false
