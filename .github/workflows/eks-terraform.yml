@@ -130,7 +130,7 @@ jobs:
     - name: Terraform Plan
       if: ${{ github.event_name == 'push' || github.event.inputs.action == 'plan' }}
       working-directory: eks
-      run: terraform plan -auto-approve -var-file=${{ github.ref == 'refs/heads/main' && 'prod.tfvars' || github.ref == 'refs/heads/staging' && 'staging.tfvars' || 'dev.tfvars' }} -input=false
+      run: terraform plan -var-file=${{ github.ref == 'refs/heads/main' && 'prod.tfvars' || github.ref == 'refs/heads/staging' && 'staging.tfvars' || 'dev.tfvars' }} -input=false
     
     - name: Terraform Action
       if: ${{ github.event_name == 'push' || github.event.inputs.action == 'apply' }}
