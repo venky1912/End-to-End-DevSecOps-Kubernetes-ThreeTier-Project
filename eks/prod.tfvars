@@ -1,6 +1,7 @@
 env                   = "prod"
 aws-region            = "eu-west-2"
 vpc-cidr-block        = "10.16.0.0/16"
+cidr-block            = "10.16.0.0/16"
 vpc-name              = "devops-eks"
 igw-name              = "igw"
 pub-subnet-count      = 3
