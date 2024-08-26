@@ -1,5 +1,5 @@
 locals {
-  org = "DevOps"
+  org = "general"
   env = var.env
 }
 

@@ -22,7 +22,7 @@ eks-sg                = "eks-sg"
 is-eks-cluster-enabled     = true
 is_eks_nodegroup_role_enabled = true
 is_eks_role_enabled           = true
-cluster-version            = "1.29"
+cluster-version            = "1.31"
 cluster-name               = "devops-eks-cluster"
 endpoint-private-access    = true
 endpoint-public-access     = false
@@ -50,74 +50,74 @@ addons = [
   {
     name    = "aws-ebs-csi-driver"
     version = "v1.30.0-eksbuild.1"
-  },
-  {
-    name    = "aws-load-balancer-controller"
-    version = "v2.4.7"
-  },
-  {
-    name    = "cluster-autoscaler"
-    version = "v1.26.2"
-  },
-  {
-    name    = "aws-efs-csi-driver"
-    version = "v1.5.9"
-  },
-  {
-    name    = "kubernetes-dashboard"
-    version = "v2.7.0"
-  },
-  {
-    name    = "cloudwatch-container-insights"
-    version = "v1.5.0"
-  },
-  {
-    name    = "kube-state-metrics"
-    version = "v2.5.0"
-  },
-  {
-    name    = "prometheus-grafana"
-    version = "v7.5.10"
-  },
-  {
-    name    = "velero"
-    version = "v1.9.5"
-  },
-  {
-    name    = "cert-manager"
-    version = "v1.9.1"
-  },
-  {
-    name    = "external-dns"
-    version = "v0.10.1"
-  },
-  {
-    name    = "aws-app-mesh-controller"
-    version = "v1.4.0"
-  },
-  {
-    name    = "falco"
-    version = "v0.32.1"
-  },
-  {
-    name    = "kube-bench"
-    version = "v0.6.7"
-  },
-  {
-    name    = "trivy"
-    version = "v0.34.0"
-  },
-  {
-    name    = "opa-gatekeeper"
-    version = "v3.7.0"
-  },
-  {
-    name    = "calico"
-    version = "v3.25.0"
-  },
-  {
-    name    = "kyverno"
-    version = "v1.9.0"
   }
+  # {
+  #   name    = "aws-load-balancer-controller"
+  #   version = "v2.4.7"
+  # },
+  # {
+  #   name    = "cluster-autoscaler"
+  #   version = "v1.26.2"
+  # },
+  # {
+  #   name    = "aws-efs-csi-driver"
+  #   version = "v1.5.9"
+  # },
+  # {
+  #   name    = "kubernetes-dashboard"
+  #   version = "v2.7.0"
+  # },
+  # {
+  #   name    = "cloudwatch-container-insights"
+  #   version = "v1.5.0"
+  # },
+  # {
+  #   name    = "kube-state-metrics"
+  #   version = "v2.5.0"
+  # },
+  # {
+  #   name    = "prometheus-grafana"
+  #   version = "v7.5.10"
+  # },
+  # {
+  #   name    = "velero"
+  #   version = "v1.9.5"
+  # },
+  # {
+  #   name    = "cert-manager"
+  #   version = "v1.9.1"
+  # },
+  # {
+  #   name    = "external-dns"
+  #   version = "v0.10.1"
+  # },
+  # {
+  #   name    = "aws-app-mesh-controller"
+  #   version = "v1.4.0"
+  # },
+  # {
+  #   name    = "falco"
+  #   version = "v0.32.1"
+  # },
+  # {
+  #   name    = "kube-bench"
+  #   version = "v0.6.7"
+  # },
+  # {
+  #   name    = "trivy"
+  #   version = "v0.34.0"
+  # },
+  # {
+  #   name    = "opa-gatekeeper"
+  #   version = "v3.7.0"
+  # },
+  # {
+  #   name    = "calico"
+  #   version = "v3.25.0"
+  # },
+  # {
+  #   name    = "kyverno"
+  #   version = "v1.9.0"
+  # }
   # Add more addons as needed
 ]
