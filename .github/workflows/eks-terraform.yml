@@ -32,7 +32,7 @@ jobs:
   
   CheckOut-Repo:
     runs-on: ubuntu-latest
-    environment: production
+    environment: dev
 
     defaults:
       run:
@@ -143,6 +143,11 @@ jobs:
     - name: Terraform Init
       working-directory: eks
       run: terraform init
+
+    # Set Default Action if not provided
+    - name: Set Default Action
+      if: ${{ !github.event.inputs.action }}
+      run: echo "::set-output name=action::plan"
 
       
     - name: Terraform Plan
