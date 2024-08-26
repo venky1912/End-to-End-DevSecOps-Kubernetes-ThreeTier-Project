@@ -1,6 +1,7 @@
 #This Section has all the Modules Variables 
 variable "cluster-name" {}
 variable "cidr-block" {}
+variable "vpc-cidr-block" {}
 variable "vpc-name" {}
 variable "env" {}
 variable "igw-name" {}
