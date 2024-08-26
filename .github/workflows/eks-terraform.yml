@@ -147,7 +147,7 @@ jobs:
     # Set Default Action if not provided
     - name: Set Default Action
       if: ${{ !github.event.inputs.action }}
-      run: echo "::set-output name=action::plan"
+      run: echo "action=plan" >> $GITHUB_ENV
 
       
     - name: Terraform Plan
