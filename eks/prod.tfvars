@@ -1,6 +1,6 @@
 env                   = "dev"
 aws-region            = "eu-west-2"
-vpc-cidr-block        = "10.16.0.0/16"
+cidr-block            = "10.16.0.0/16"
 vpc-name              = "devops-eks"
 igw-name              = "igw"
 pub-subnet-count      = 3
@@ -19,6 +19,7 @@ eks-sg                = "eks-sg"
 
 # EKS
 is-eks-cluster-enabled     = true
+is_eks_nodegroup_role_enabled = true
 cluster-version            = "1.29"
 cluster-name               = "devops-eks-cluster"
 endpoint-private-access    = true
