@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+      - dev
+      - staging
+  pull_request:
+    branches:
+      - main
+      - dev
+      - staging   
   workflow_dispatch:
     inputs:
       tfvars_file:
@@ -32,7 +39,7 @@ jobs:
   
   CheckOut-Repo:
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || github.ref == 'refs/heads/staging' && 'staging' || 'dev' }}
 
     defaults:
       run:
