@@ -132,8 +132,8 @@ jobs:
       - name: OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.7.0
         with:
-        target: 'https://github.com/venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project'
-        format: 'html'
+          target: 'https://github.com/venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project'
+          format: 'html'
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
 
@@ -214,9 +214,9 @@ jobs:
       - name: TRIVY Image Scan
         uses: aquasecurity/trivy-action@v0.6.0
         with:
-        image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/mern-frontend:${{ github.run_number }}
-        format: 'table'  # You can use 'json' or 'sarif' depending on your needs
-        output: 'trivyimage.txt'
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/mern-frontend:${{ github.run_number }}
+          format: 'table'  # You can use 'json' or 'sarif' depending on your needs
+          output: 'trivyimage.txt'
 
 
   Update-Deployment-File:
