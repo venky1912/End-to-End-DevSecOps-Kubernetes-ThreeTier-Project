@@ -81,7 +81,7 @@ jobs:
 
       # Step 6: SonarQube Analysis
       - name: SonarQube Analysis
-        uses: sonarsource/sonarqube-scan-action@v1.0
+        uses: sonarsource/sonarqube-scan-action@v1.1.0
         with:
           args: |
             -Dsonar.projectName=three-tier-backend \
