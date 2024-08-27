@@ -39,7 +39,7 @@ jobs:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
         with:
-          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
+          #repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
           token: ${{ secrets.GH_PAT }}
 
       - name: Set up Node.js
@@ -76,7 +76,7 @@ jobs:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
         with:
-          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
+          #repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
           token: ${{ secrets.GH_PAT }}
 
       # Step 6: SonarQube Analysis
@@ -118,7 +118,7 @@ jobs:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
         with:
-          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
+          #repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
           token: ${{ secrets.GH_PAT }}
 
       # Stage 9: OWASP Dependency-Check Scan
@@ -152,7 +152,7 @@ jobs:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
         with:
-          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
+          #repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
           token: ${{ secrets.GH_PAT }}
 
       
@@ -178,7 +178,7 @@ jobs:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
         with:
-          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
+          #repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
           token: ${{ secrets.GH_PAT }}
 
       - name: Prune Docker system and containers
