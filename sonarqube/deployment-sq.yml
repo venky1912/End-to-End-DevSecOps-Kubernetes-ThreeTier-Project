@@ -4,7 +4,7 @@ metadata:
   name: sonarqube
   namespace: sonarqube
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: sonarqube
@@ -21,15 +21,12 @@ spec:
           privileged: true
       containers:
       - name: sonarqube
-        image: sonarqube:community
+        image: sonarqube:latest
         ports:
         - containerPort: 9000
         env:
         - name: SONAR_JDBC_URL
-          valueFrom:
-            configMapKeyRef:
-              name: sonarqube-config
-              key: sonar.jdbc.url
+          value: jdbc:postgresql://postgres.sonarqube.svc.cluster.local:5432/sonardb
         - name: SONAR_JDBC_USERNAME
           valueFrom:
             secretKeyRef:
@@ -43,6 +40,13 @@ spec:
         volumeMounts:
         - mountPath: /opt/sonarqube/data
           name: sonarqube-storage
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
       volumes:
       - name: sonarqube-storage
         persistentVolumeClaim:
