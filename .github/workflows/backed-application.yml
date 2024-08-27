@@ -94,7 +94,7 @@ jobs:
       # Step 7: SonarQube Quality Gate Check
       - name: SonarQube Quality Gate
         id: quality-gate
-        uses: sonarsource/sonarqube-quality-gate-action@v1.0
+        uses: sonarsource/sonarqube-quality-gate-action@v1.1.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
