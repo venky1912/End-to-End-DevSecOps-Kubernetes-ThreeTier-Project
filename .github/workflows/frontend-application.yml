@@ -1,261 +1,301 @@
-# name: CI/CD Pipeline
+name: Frontend application
+# Trigger the workflow on push or pull request events to the master branch
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'helm/**'
+      - 'k8s/**'
+      - 'README.md'
+      - 'eks/**'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'helm/**'
+      - 'k8s/**'
+      - 'README.md'
+      - 'eks/**'
 
-# # Trigger the workflow on push or pull request events to the master branch
-# on:
-#   push:
-#     branches:
-#       - main
-#     paths-ignore:
-#       - 'helm/**'
-#       - 'README.md'
-#       - 'eks/**'
-#   pull_request:
-#     branches:
-#       - main
-#     paths-ignore:
-#       - 'helm/**'
-#       - 'README.md'
-#       - 'eks/**'
+env:
+  AWS_DEFAULT_REGION: 'eu-west-2'
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  GH_PAT: ${{ secrets.GH_PAT }}
 
-# env:
-#   AWS_DEFAULT_REGION: 'eu-west-2'
-#   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-#   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-#   GH_PAT: ${{ secrets.GH_PAT }}
+jobs:
+  Checkout-Install-Dep:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: Application-Code/frontend
 
-# jobs:
-#   Checkout-Install-Dep:
-#     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         shell: bash
-#         working-directory: Application-Code/frontend
-
-#     steps:
+    steps:
     
-#       # Stage 1: Checkout code from GitHub
-#       - name: Checkout code from GitHub
-#         uses: actions/checkout@v4
-#         with:
-#           repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
-#           token: ${{ secrets.GH_PAT }}
+      # Stage 1: Checkout code from GitHub
+      - name: Checkout code from GitHub
+        uses: actions/checkout@v4
+        with:
+          #repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
+          token: ${{ secrets.GH_PAT }}
 
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: '14'  # Match the Node.js version in the Dockerfile
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'  # Match the Node.js version in the Dockerfile
 
-#       # Step 3: Cache node_modules (optional, but can speed up builds)
-#       - name: Cache node_modules
-#         uses: actions/cache@v3
-#         with:
-#           path: node_modules
-#           key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
-#           restore-keys: |
-#             ${{ runner.os }}-node_modules-
+      # Step 3: Cache node_modules (optional, but can speed up builds)
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
 
-#        # Step 4: Install dependencies
-#       - name: Install dependencies
-#         run: npm install
+       # Step 4: Install dependencies
+      - name: Install dependencies
+        run: npm install
 
-#       # Step 5: Run tests (optional, but recommended)
-#       - name: Run tests
-#         run: npm test
+  Code-Quality-Check:
+    runs-on: ubuntu-latest
+    needs: Checkout-Install-Dep
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./Application-Code/frontend
 
-#   Code-Quality-Check:
-#     runs-on: ubuntu-latest
-#     needs: Checkout-Install-Dep
-#     defaults:
-#       run:
-#         shell: bash
-#         working-directory: Application-Code/frontend
+    steps:
+      - name: Checkout code from GitHub
+        uses: actions/checkout@v4
+        with:
+          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
+          token: ${{ secrets.GH_PAT }}
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
 
-#     steps:
-#       - name: Checkout code from GitHub
-#         uses: actions/checkout@v4
-#         with:
-#           repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
-#           token: ${{ secrets.GH_PAT }}
+      - name: Set JAVA_HOME
+        run: |
+          echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> $GITHUB_ENV
+          echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
+          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
 
-#       # Step 6: SonarQube Analysis
-#       - name: SonarQube Analysis
-#         uses: sonarsource/sonarqube-scan-action@v1.0
-#         with:
-#           args: |
-#             -Dsonar.projectName=three-tier-backend \
-#             -Dsonar.projectKey=three-tier-backend \
-#             -Dsonar.sources=Application-Code/frontend
-#         env:
-#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # Add this if using Hosted server
+      - name: Verify Java version
+        run: java -version
 
-#       # Step 7: SonarQube Quality Gate Check
-#       - name: SonarQube Quality Gate
-#         id: quality-gate
-#         uses: sonarsource/sonarqube-quality-gate-action@v1.0
-#         env:
-#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Install SonarQube Scanner
+        run: npm install -g sonar-scanner
 
-#       # Step 8: Notify on Quality Gate Failure (Optional)
-#       - name: Notify on Quality Gate Failure
-#         run: echo "Quality Gate Failed! Taking necessary actions."
-#         if: ${{ steps.quality-gate.outputs.conclusion != 'success' }} # Only run if the quality gate passes
+      # - name: Add SonarQube Scanner to PATH
+      #   run: |
+      #     SONAR_SCANNER_PATH=$(npm bin -g)
+      #     echo "SONAR_SCANNER_PATH=$SONAR_SCANNER_PATH" >> $GITHUB_ENV
+      #     echo "$SONAR_SCANNER_PATH" >> $GITHUB_PATH
+
+      - name: Verify SonarQube Scanner installation
+        run: sonar-scanner --version
+
+      # Step 6: SonarQube Analysis
+      - name: SonarQube Analysis
+        working-directory: Application-Code/frontend
+        run: |
+          sonar-scanner \
+          -Dsonar.projectKey="three-tier-frontend" \
+          -Dsonar.projectName="three-tier-frontend" \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # Add this if using Hosted server
+        
+      # Introduce a delay to allow SonarQube to process the results
+      - name: Wait for SonarQube to process results
+        run: sleep 3
+
+      # Step 7: SonarQube Quality Gate Check
+      # - name: SonarQube Quality Gate
+      #   id: quality-gate
+      #   uses: sonarsource/sonarqube-quality-gate-action@v1.0
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      # # Step 8: Notify on Quality Gate Failure (Optional)
+      # - name: Notify on Quality Gate Failure
+      #   run: echo "Quality Gate Failed! Taking necessary actions."
+      #   if: ${{ steps.quality-gate.outputs.conclusion != 'success' }} # Only run if the quality gate passes
 
   
-#   OWASP-Dependency-Check:
-#     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         shell: bash
-#         working-directory: Application-Code/frontend
+  OWASP-Dependency-Check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: Application-Code/frontend
 
-#     needs: Code-Quality-Check
+    needs: Code-Quality-Check
 
-#     steps:
-#       - name: Checkout code from GitHub
-#         uses: actions/checkout@v4
-#         with:
-#           repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
-#           token: ${{ secrets.GH_PAT }}
+    steps:
+      - name: Checkout code from GitHub
+        uses: actions/checkout@v4
+        with:
+          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project'
+          token: ${{ secrets.GH_PAT }}
 
-#       # Stage 9: OWASP Dependency-Check Scan
-#       - name: OWASP Dependency-Check
-#         uses: dependency-check/github-action@v2.0.1
-#         with:
-#           scan: './'
-#           format: 'ALL'
-#           failCriteria: 'LOW'
-#         env:
-#           GH_PAT: ${{ secrets.GH_PAT }}
+      # Stage 9: OWASP Dependency-Check Scan
+      - name: OWASP Dependency-Check
+        uses: dependency-check/Dependency-Check_Action@1.1.0
+        with:
+          project: 'NodeJs frontend'
+          path: './'
+          format: 'ALL'
+          ailOnCVSS: '7'  # Fail if any vulnerabilities have a CVSS score of 7 or higher
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
 
-#       - name: OWASP ZAP Baseline Scan
-#         uses: zaproxy/action-baseline@v0.7.0
-#         with:
-#           target: 'https://github.com/venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project'
-#           format: 'html'
-#         env:
-#           GH_PAT: ${{ secrets.GH_PAT }}
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.7.0
+        with:
+          docker_name: ghcr.io/zaproxy/zaproxy:stable  # Use the weekly image if stable is not available
+          target: 'https://github.com/venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project'
+          token: ${{ secrets.GH_PAT }}
+          issue_title: ZAP Scan Baseline Report
+          fail_action: false
+          allow_issue_writing: true
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
 
 
-#   File-Scan-With-Trivy:
-#     runs-on: ubuntu-latest
-#     needs: OWASP-Dependency-Check
-#     defaults:
-#       run:
-#         shell: bash
-#         working-directory: Application-Code/frontend
+  File-Scan-With-Trivy:
+    runs-on: ubuntu-latest
+    needs: OWASP-Dependency-Check
+    defaults:
+      run:
+        shell: bash
+        working-directory: Application-Code/frontend
 
-#     steps:
-#       - name: Checkout code from GitHub
-#         uses: actions/checkout@v4
-#         with:
-#           repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
-#           token: ${{ secrets.GH_PAT }}
+    steps:
+      - name: Checkout code from GitHub
+        uses: actions/checkout@v4
+        with:
+          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project'
+          token: ${{ secrets.GH_PAT }}
 
       
-#       # Trivy File Scan
-#       - name: Run Trivy FS Scan
-#         uses: aquasecurity/trivy-action@v0.6.0
-#         with:
-#           scan-type: 'fs'
-#           path: './'
-#           format: 'json'
-#           output: 'trivy-report.json'  # Specify the output file
-#           exit-code: '1'
+      # Trivy File Scan
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: 'fs'
+          scan-ref: './'
+          trivy-config: trivy.yaml
+          format: 'json'
+          output: 'trivy-report.json'  # Specify the output file
+          exit-code: '0'
 
-#   Docker-Build-Push:
-#     runs-on: ubuntu-latest
-#     needs: File-Scan-With-Trivy
-#     defaults:
-#       run:
-#         shell: bash
-#         working-directory: Application-Code/frontend
+  Docker-Build-Push:
+    runs-on: ubuntu-latest
+    needs: File-Scan-With-Trivy
+    defaults:
+      run:
+        shell: bash
+        working-directory: Application-Code/frontend
 
-#     steps:
-#       - name: Checkout code from GitHub
-#         uses: actions/checkout@v4
-#         with:
-#           repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
-#           token: ${{ secrets.GH_PAT }}
+    steps:
+      - name: Checkout code from GitHub
+        uses: actions/checkout@v4
+        with:
+          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project'
+          token: ${{ secrets.GH_PAT }}
 
-#       - name: Prune Docker system and containers
-#         run: |
-#           docker system prune -f
-#           docker container prune -f
+      - name: List directory contents
+        run: ls -al
 
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#       # Build the Docker image and Push it the DockerHub
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v1
+      - name: Build Docker Image
+        run: |
+          docker build -t venky1912/mern-frontend:${{ github.run_number }} .
+          docker push venky1912/mern-frontend:${{ github.run_number }}
 
-#       - name: Login to DockerHub
-#         uses: docker/login-action@v3
-#         with:
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_TOKEN }}
+  Trivy-Image-Scan:
+    runs-on: ubuntu-latest
+    needs: Docker-Build-Push
 
-#       - name: Build Docker Image
-#         run: |
-#           cd Application-Code/frontend
-#           docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.run_number }} .
-
-#       - name: Tag and Push Docker Image
-#         run: |
-#           docker tag ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.run_number }} ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.run_number }}
-#           docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.run_number }}
-
-#   Trivy-Image-Scan:
-#     runs-on: ubuntu-latest
-#     needs: Docker-Build-Push
-
-#     steps:
+    steps:
       
-#       - name: TRIVY Image Scan
-#         uses: aquasecurity/trivy-action@v0.6.0
-#         with:
-#           image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/mern-frontend:${{ github.run_number }}
-#           format: 'table'  # You can use 'json' or 'sarif' depending on your needs
-#           output: 'trivyimage.txt'
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: 'docker.io/${{ secrets.DOCKERHUB_USERNAME }}/mern-frontend:${{ github.run_number }}'
+          format: 'table'  # You can use 'json' or 'sarif' depending on your needs
+          output: 'trivyimage.txt'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'library'
+          severity: 'CRITICAL,HIGH'
+          scan-type: image
+          list-all-pkgs: false
+          scanners: vuln  # Disables secret scanning for faster results
 
 
-#   Update-Deployment-File:
-#     runs-on: ubuntu-latest
-#     needs: Trivy-Image-Scan
-#     defaults:
-#       run:
-#         shell: bash
-#         working-directory: K8s-Manifests-file/Frontend
+  Update-Deployment-File:
+    runs-on: ubuntu-latest
+    needs: Trivy-Image-Scan
+    defaults:
+      run:
+        shell: bash
+        working-directory: K8s-Manifests-file/Frontend
 
-#     steps:
-#       # Stage 10: Checkout Kubernetes Manifests
-#       - name: Checkout Kubernetes Manifests
-#         uses: actions/checkout@v4
-#         with:
-#           repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
-#           token: ${{ secrets.GH_PAT }}
-#           path: K8s-Manifests-file/Frontend
+    steps:
+      # Stage 10: Checkout Kubernetes Manifests
+      - name: Checkout Kubernetes Manifests
+        uses: actions/checkout@v4
+        with:
+          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project'
+          token: ${{ secrets.GH_PAT }}
+          path: K8s-Manifests-file/Frontend
 
-#         # Extract the current image tag from deployment.yml
-#       - name: Update image tag in Kubernetes deployment.yml
-#         run: |
-#           cd K8s-Manifests-file/Frontend
+        # Extract the current image tag from deployment.yml
+      - name: List directory contents
+        run: |
+          ls -al
 
-#           imageTag=$(grep -oP '(?<=image: ).*' deployment.yml)
+        # Extract the current image tag from deployment.yml
+      - name: Update image tag in Kubernetes deployment.yml
+        run: |
+          ls -al K8s-Manifests-file/Frontend
+          imageTag=$(grep -oP '(?<=image: ).*' K8s-Manifests-file/Frontend/deployment.yaml)
         
-#           sed -i "s|$imageTag|${{ secrets.DOCKERHUB_USERNAME }}/mern-frontend:${{ github.run_number }}|" deployment.yml
+          sed -i "s|$imageTag|${{ secrets.DOCKERHUB_USERNAME }}/mern-backend:${{ github.run_number }}|" K8s-Manifests-file/Frontend/deployment.yaml
 
-#         ##Push cahnges to the Github Repository
-#       - name: Commit The changes
-#         run: |
-#           git config --global user.email "snikommuvenky115@gmail.com"
-#           git config --global user.name "Venky Sanikommu"
-#           git add deployment.yml
-#           git commit -m "Update deployment image to version ${{ github.run_number }}"
+        ##Push cahnges to the Github Repository
+      # - name: Commit The changes
+      #   run: |
+      #     git config --global user.email "snikommuvenky115@gmail.com"
+      #     git config --global user.name "Venky Sanikommu"
+      #     git add deployment.yml
+      #     git commit -m "Update deployment image to version ${{ github.run_number }}"
       
-#       - name: Push Changes to Github
-#         env:
-#           GH_PAT: ${{ secrets.GT_PAT }}
+      # - name: Push Changes to Github
+      #   env:
+      #     GH_PAT: ${{ secrets.GT_PAT }}
 
-#         run: |
-#           git push https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }} HEAD:main
+      #   run: |
+      #     git push https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }} HEAD:main
