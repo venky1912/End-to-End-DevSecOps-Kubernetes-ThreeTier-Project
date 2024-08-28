@@ -111,7 +111,7 @@ jobs:
         #uses: sonarsource/sonarqube-scan-action@v1.1.0
         run: sonar-scanner \
           -Dsonar.projectKey=three-tier-backend \
-          -Dsonar.sources="Application-Code/backend/" \
+          -Dsonar.sources="Application-Code/backend" \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
           -Dsonar.language=java \
