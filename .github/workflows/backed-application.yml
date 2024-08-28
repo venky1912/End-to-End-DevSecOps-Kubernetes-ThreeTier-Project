@@ -109,14 +109,15 @@ jobs:
       # Step 6: SonarQube Analysis
       - name: SonarQube Analysis
         #uses: sonarsource/sonarqube-scan-action@v1.1.0
+        working-directory: Application-Code/backend
         run: sonar-scanner \
-          -Dsonar.projectKey=three-tier-backend \
-          -Dsonar.sources="Application-Code/backend" \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-          -Dsonar.language=java \
-          -Dsonar.java.binaries=target/classes \
-          -Dsonar.sourceEncoding=UTF-8 \
+          sonar.projectKey=three-tier-backend \
+          sonar.sources="Application-Code/backend" \
+          sonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          sonar.login=${{ secrets.SONAR_TOKEN }} \
+          sonar.language=java \
+          sonar.java.binaries=target/classes \
+          sonar.sourceEncoding=UTF-8 \
           -X
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
