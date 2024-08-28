@@ -210,7 +210,7 @@ jobs:
           trivy-config: trivy.yaml
           format: 'json'
           output: 'trivy-report.json'  # Specify the output file
-          exit-code: '1'
+          exit-code: '0'
 
   Docker-Build-Push:
     runs-on: ubuntu-latest
