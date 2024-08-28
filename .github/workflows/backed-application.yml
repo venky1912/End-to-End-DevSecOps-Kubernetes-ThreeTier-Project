@@ -87,19 +87,18 @@ jobs:
 
       - name: Set JAVA_HOME
         run: |
-          echo "JAVA_HOME=$(echo $(/usr/libexec/java_home -v 17))" >> $GITHUB_ENV
-          echo "JAVA_HOME=$(which java)" >> $GITHUB_ENV
-      
+          echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> $GITHUB_ENV
+          echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
+          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
+
       - name: Verify Java version
         run: java -version
-          
-
-      - name: Install SonarQube Scanner
-        run: npm install -g sonar-scanner
 
       - name: Build with Maven and SonarQube Analysis
         run: mvn -X sonar:sonar -DskipTests=true
         env:
+          JAVA_HOME: ${{ env.JAVA_HOME }}
+          PATH: ${{ env.PATH }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
