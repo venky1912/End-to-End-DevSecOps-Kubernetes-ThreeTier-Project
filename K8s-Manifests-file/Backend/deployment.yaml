@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: venky1912/mern-backend:74
+          image: venky1912/mern-backend:76
           imagePullPolicy: Always
           env:
             - name: MONGO_CONN_STR
