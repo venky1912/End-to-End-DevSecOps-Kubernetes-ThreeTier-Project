@@ -83,9 +83,9 @@ jobs:
       - name: SonarQube Analysis
         uses: sonarsource/sonarqube-scan-action@v1.1.0
         with:
-          args: |
-            -Dsonar.projectName=three-tier-backend \
-            -Dsonar.projectKey=three-tier-backend \
+          args: >
+            -Dsonar.projectName=three-tier-backend
+            -Dsonar.projectKey=three-tier-backend
             -Dsonar.sources=Application-Code/backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
