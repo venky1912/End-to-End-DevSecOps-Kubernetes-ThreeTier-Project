@@ -55,3 +55,6 @@ variable "desired_capacity_spot" {}
 variable "min_capacity_spot" {}
 variable "max_capacity_spot" {}
 variable "aws-region" {}
+variable "instance_type" {}
+variable "key_name" {}
+variable "ami_id" {}

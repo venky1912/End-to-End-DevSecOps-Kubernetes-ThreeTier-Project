@@ -42,3 +42,68 @@ module "eks" {
 
   addons = var.addons
 }
+
+# SonarQube Instance
+
+resource "aws_instance" "SonarQube" {
+  ami = var.ami_id
+  instance_type = var.instance_type
+  subnet_id = "subnet-01eb678c839d9b0d5"
+  key_name = var.key_name
+  vpc_security_group_ids = [aws_security_group.sonarqube_sg.id]
+  user_data = file("sonarinstall.sh")
+
+  root_block_device {
+    volume_size = 50  # Allocate 50 GB to the root volume
+    volume_type = "gp2"  # General Purpose SSD
+  }
+  tags = {
+    Name = "SonarQube-Instance"
+  }
+
+  
+}
+
+
+
+#SQ security group
+
+resource "aws_security_group" "sonarqube_sg" {
+  name   = "sonarqube-sg"
+  vpc_id = output.vpc_id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}

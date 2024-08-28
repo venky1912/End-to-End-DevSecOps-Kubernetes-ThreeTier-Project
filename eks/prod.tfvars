@@ -1,4 +1,7 @@
 env                   = "prod"
+instance_type         = "t3a.medium"
+ami_id                = "ami-01ec84b284795cbc7"
+key_name              = "saidevops"
 aws-region            = "eu-west-2"
 vpc-cidr-block        = "10.16.0.0/16"
 cidr-block            = "10.16.0.0/16"
