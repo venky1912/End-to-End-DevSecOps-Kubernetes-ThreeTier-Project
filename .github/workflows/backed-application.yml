@@ -202,11 +202,12 @@ jobs:
 
       
       # Trivy File Scan
-      - name: Run Trivy FS Scan
-        uses: aquasecurity/trivy-action@v0.24.0
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           scan-type: 'fs'
-          path: './'
+          scan-ref: './'
+          trivy-config: trivy.yaml
           format: 'json'
           output: 'trivy-report.json'  # Specify the output file
           exit-code: '1'
@@ -258,12 +259,16 @@ jobs:
 
     steps:
       
-      - name: TRIVY Image Scan
-        uses: aquasecurity/trivy-action@v0.24.0
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/mern-backend:${{ github.run_number }}
+          image-ref: 'docker.io/${{ secrets.DOCKERHUB_USERNAME }}/mern-backend:${{ github.run_number }}'
           format: 'table'  # You can use 'json' or 'sarif' depending on your needs
           output: 'trivyimage.txt'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
 
 
   Update-Deployment-File:
