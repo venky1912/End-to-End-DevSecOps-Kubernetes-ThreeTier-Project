@@ -112,7 +112,8 @@ jobs:
         working-directory: Application-Code/backend
         run: sonar-scanner \
           sonar.projectKey=three-tier-backend \
-          -X
+          sonar.projectName=three-tier-backend
+
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # Add this if using Hosted server
