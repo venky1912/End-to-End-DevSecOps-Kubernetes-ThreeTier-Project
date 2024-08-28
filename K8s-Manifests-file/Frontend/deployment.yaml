@@ -23,7 +23,7 @@ spec:
     spec: 
       containers:
       - name: frontend
-        image: venky/mern-frontend:3
+        image: venky1912/mern-frontend:3
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
