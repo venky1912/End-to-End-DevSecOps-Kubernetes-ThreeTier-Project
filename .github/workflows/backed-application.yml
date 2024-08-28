@@ -203,7 +203,7 @@ jobs:
       
       # Trivy File Scan
       - name: Run Trivy FS Scan
-        uses: quasecurity/trivy-action@latest
+        uses: aquasecurity/trivy-action@latest
         with:
           scan-type: 'fs'
           path: './'
@@ -259,7 +259,7 @@ jobs:
     steps:
       
       - name: TRIVY Image Scan
-        uses: quasecurity/trivy-action@latest
+        uses: aquasecurity/trivy-action@latest
         with:
           image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/mern-backend:${{ github.run_number }}
           format: 'table'  # You can use 'json' or 'sarif' depending on your needs
