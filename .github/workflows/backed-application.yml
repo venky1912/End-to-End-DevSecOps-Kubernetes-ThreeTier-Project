@@ -112,8 +112,6 @@ jobs:
         working-directory: Application-Code/backend
         run: sonar-scanner \
           sonar.projectKey=three-tier-backend \
-          sonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          sonar.login=${{ secrets.SONAR_TOKEN }} \
           sonar.language=java \
           sonar.java.binaries=target/classes \
           sonar.sourceEncoding=UTF-8 \
