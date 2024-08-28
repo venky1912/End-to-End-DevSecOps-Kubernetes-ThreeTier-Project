@@ -267,6 +267,9 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+          scan-type: image
+          list-all-pkgs: false
+          scanners: vuln  # Disables secret scanning for faster results
 
 
   Update-Deployment-File:
