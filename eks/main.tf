@@ -65,7 +65,7 @@ resource "aws_instance" "SonarQube" {
 }
 
 
-
+# Updated iam policy 
 #SQ security group
 
 resource "aws_security_group" "sonarqube_sg" {
