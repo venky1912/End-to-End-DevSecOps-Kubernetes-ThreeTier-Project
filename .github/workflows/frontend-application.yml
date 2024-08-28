@@ -282,8 +282,8 @@ jobs:
         run: |
           ls -al K8s-Manifests-file/Frontend
           imageTag=$(grep -oP '(?<=image: ).*' K8s-Manifests-file/Frontend/deployment.yaml)
-        
-          sed -i "s|$imageTag|${{ secrets.DOCKERHUB_USERNAME }}/mern-backend:${{ github.run_number }}|" K8s-Manifests-file/Frontend/deployment.yaml
+
+          sed -i "s|$imageTag|${{ secrets.DOCKERHUB_USERNAME }}/mern-frontend:${{ github.run_number }}|" K8s-Manifests-file/Frontend/deployment.yaml
 
         ##Push cahnges to the Github Repository
       # - name: Commit The changes
