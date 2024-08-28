@@ -1,66 +1,25 @@
 #!/bin/bash
-# Update and install required packages
+# Update and install necessary packages
 apt-get update -y
-apt-get install -y openjdk-11-jdk wget gnupg2 unzip postgresql postgresql-contrib
+apt-get install -y apt-transport-https ca-certificates curl software-properties-common
 
-# Install SonarQube
-useradd -m -d /opt/sonarqube -s /bin/bash sonarqube
-cd /opt/sonarqube
-wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.6.1.59531.zip
-unzip sonarqube-9.6.1.59531.zip
-mv sonarqube-9.6.1.59531/* /opt/sonarqube
-chown -R sonarqube:sonarqube /opt/sonarqube
+# Install Docker
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+apt-get update -y
+apt-get install -y docker-ce
 
-# Set up PostgreSQL
-sudo -i -u postgres psql -c "CREATE DATABASE sonardb;"
-sudo -i -u postgres psql -c "CREATE USER sonaruser WITH ENCRYPTED PASSWORD 'sonarpass';"
-sudo -i -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE sonardb TO sonaruser;"
+# Start Docker service
+systemctl start docker
+systemctl enable docker
 
-# Configure SonarQube to connect to PostgreSQL
-cat <<EOT >> /opt/sonarqube/conf/sonar.properties
-sonar.jdbc.username=sonaruser
-sonar.jdbc.password=sonarpass
-sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonardb
-sonar.web.javaAdditionalOpts=-server
-sonar.web.host=0.0.0.0
-sonar.web.port=9000
-EOT
+# Pull SonarQube Docker image
+docker pull sonarqube:10.6.0-community
 
-# Increase system limits for SonarQube
-sysctl -w vm.max_map_count=262144
-sysctl -w fs.file-max=65536
-ulimit -n 65536
-ulimit -u 4096
+# Run SonarQube container
+docker run -dit --name sonarqube -p 9000:9000 sonarqube:10.6.0-community
 
-# Start PostgreSQL and SonarQube services
-systemctl enable postgresql
-systemctl start postgresql
+# Set Docker to start SonarQube on boot
+docker update --restart always sonarqube
 
-# Ensure SonarQube starts on boot
-cat <<EOT >> /etc/systemd/system/sonarqube.service
-[Unit]
-Description=SonarQube service
-After=syslog.target network.target
-
-[Service]
-Type=forking
-
-ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
-ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
-
-User=sonarqube
-Group=sonarqube
-Restart=always
-
-LimitNOFILE=65536
-LimitNPROC=4096
-
-[Install]
-WantedBy=multi-user.target
-EOT
-
-systemctl enable sonarqube
-
-# Ensure port 9000 is open
-ufw allow 9000/tcp
 
