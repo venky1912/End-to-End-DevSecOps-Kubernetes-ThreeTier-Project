@@ -152,12 +152,12 @@ jobs:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
         with:
-          #repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
+          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
           token: ${{ secrets.GH_PAT }}
 
       # Stage 9: OWASP Dependency-Check Scan
       - name: OWASP Dependency-Check
-        uses: dependency-check/github-action@v2.0.1
+        uses: dependency-check/github-action@v2.3.1
         with:
           scan: './'
           format: 'ALL'
