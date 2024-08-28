@@ -70,7 +70,7 @@ resource "aws_instance" "SonarQube" {
 
 resource "aws_security_group" "sonarqube_sg" {
   name   = "sonarqube-sg"
-  vpc_id = output.vpc_id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = 22
