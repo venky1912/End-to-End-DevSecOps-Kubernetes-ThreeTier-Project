@@ -8,6 +8,7 @@ on:
     paths-ignore: # This can be used to ignore specific paths if only backend files are updated.
       - 'K8s-Manifests-file/Backend/**'
       - 'Application-Code/backend/**'
+      - '.github/workflows/backend-application.yml'
   pull_request:
     branches:
       - main
