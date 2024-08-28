@@ -119,6 +119,10 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # Add this if using Hosted server
+        
+      # Introduce a delay to allow SonarQube to process the results
+      - name: Wait for SonarQube to process results
+        run: sleep 3
 
       # Step 7: SonarQube Quality Gate Check
       - name: SonarQube Quality Gate
