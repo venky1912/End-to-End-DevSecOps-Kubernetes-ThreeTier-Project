@@ -157,8 +157,9 @@ jobs:
 
       # Stage 9: OWASP Dependency-Check Scan
       - name: OWASP Dependency-Check
-        uses: jeremylong/dependency-check-action@latest
+        uses: dependency-check/Dependency-Check_Action@1.1.0
         with:
+          project: 'NodeJs backend'
           scan: './'
           format: 'ALL'
           failCriteria: 'LOW'
