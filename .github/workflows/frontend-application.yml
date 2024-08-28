@@ -4,19 +4,12 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'helm/**'
-      - 'k8s/**'
-      - 'README.md'
-      - 'eks/**'
+
+
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - 'helm/**'
-      - 'k8s/**'
-      - 'README.md'
-      - 'eks/**'
+
 
 env:
   AWS_DEFAULT_REGION: 'eu-west-2'
@@ -292,7 +285,7 @@ jobs:
           git config --global user.name "Venky Sanikommu"
           git add K8s-Manifests-file/Frontend/deployment.yaml
           git commit -m "Update deployment image to version ${{ github.run_number }} [ci skip]" # Add [ci skip] to prevent retriggering
-      
+
       - name: Push Changes to Github
         env:
           GH_PAT: ${{ secrets.GT_PAT }}

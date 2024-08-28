@@ -5,19 +5,13 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'helm/**'
-      - 'k8s/**'
-      - 'README.md'
-      - 'eks/**'
+
+
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - 'helm/**'
-      - 'k8s/**'
-      - 'README.md'
-      - 'eks/**'
+
+
 
 env:
   AWS_DEFAULT_REGION: 'eu-west-2'
