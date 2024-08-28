@@ -85,6 +85,13 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
+      - name: Set JAVA_HOME
+        run: echo "JAVA_HOME=$(which java)" >> $GITHUB_ENV
+      
+      - name: Verify Java version
+        run: java -version
+          
+
       - name: Install SonarQube Scanner
         run: npm install -g sonar-scanner
 
