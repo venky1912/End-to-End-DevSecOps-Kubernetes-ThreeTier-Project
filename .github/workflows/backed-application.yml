@@ -197,13 +197,13 @@ jobs:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
         with:
-          #repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
+          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project'
           token: ${{ secrets.GH_PAT }}
 
       
       # Trivy File Scan
       - name: Run Trivy FS Scan
-        uses: aquasecurity/trivy-action@v0.6.0
+        uses: quasecurity/trivy-action@latest
         with:
           scan-type: 'fs'
           path: './'
@@ -259,7 +259,7 @@ jobs:
     steps:
       
       - name: TRIVY Image Scan
-        uses: aquasecurity/trivy-action@v0.6.0
+        uses: quasecurity/trivy-action@latest
         with:
           image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/mern-backend:${{ github.run_number }}
           format: 'table'  # You can use 'json' or 'sarif' depending on your needs
