@@ -97,11 +97,11 @@ jobs:
       - name: Install SonarQube Scanner
         run: npm install -g sonar-scanner
 
-      - name: Add SonarQube Scanner to PATH
-        run: |
-          SONAR_SCANNER_PATH=$(npm bin -g)
-          echo "SONAR_SCANNER_PATH=$SONAR_SCANNER_PATH" >> $GITHUB_ENV
-          echo "$SONAR_SCANNER_PATH" >> $GITHUB_PATH
+      # - name: Add SonarQube Scanner to PATH
+      #   run: |
+      #     SONAR_SCANNER_PATH=$(npm bin -g)
+      #     echo "SONAR_SCANNER_PATH=$SONAR_SCANNER_PATH" >> $GITHUB_ENV
+      #     echo "$SONAR_SCANNER_PATH" >> $GITHUB_PATH
 
       - name: Verify SonarQube Scanner installation
         run: sonar-scanner --version
