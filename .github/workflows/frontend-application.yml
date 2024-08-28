@@ -5,10 +5,16 @@ on:
     branches:
       - main
 
-
+    paths-ignore: # This can be used to ignore specific paths if only backend files are updated.
+      - 'K8s-Manifests-file/Backend/**'
+      - 'Application-Code/backend/**'
   pull_request:
     branches:
       - main
+
+    paths-ignore: # This can be used to ignore specific paths if only backend files are updated.
+      - 'K8s-Manifests-file/Backend/**'
+      - 'Application-Code/backend/**'
 
 
 env:
