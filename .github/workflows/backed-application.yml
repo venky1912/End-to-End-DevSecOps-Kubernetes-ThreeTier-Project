@@ -248,12 +248,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.run_number }} .
-
-      - name: Tag and Push Docker Image
-        run: |
-          docker tag ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.run_number }} ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.run_number }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.run_number }}
+          docker build -t venky1912/mern-backend:${{ github.run_number }} .
+          docker push venky1912/mern-backend:${{ github.run_number }}
 
   Trivy-Image-Scan:
     runs-on: ubuntu-latest
@@ -286,7 +282,7 @@ jobs:
       - name: Checkout Kubernetes Manifests
         uses: actions/checkout@v4
         with:
-          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project.git'
+          repository: 'venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project'
           token: ${{ secrets.GH_PAT }}
           path: K8s-Manifests-file/Backend
 
