@@ -1,13 +1,12 @@
 #!/bin/bash
 # Update and install required packages
 apt-get update -y
-apt-get install -y openjdk-11-jdk wget gnupg2 postgresql postgresql-contrib
+apt-get install -y openjdk-11-jdk wget gnupg2 unzip postgresql postgresql-contrib
 
 # Install SonarQube
 useradd -m -d /opt/sonarqube -s /bin/bash sonarqube
 cd /opt/sonarqube
 wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.6.1.59531.zip
-apt-get install -y unzip
 unzip sonarqube-9.6.1.59531.zip
 mv sonarqube-9.6.1.59531/* /opt/sonarqube
 chown -R sonarqube:sonarqube /opt/sonarqube
@@ -23,13 +22,19 @@ sonar.jdbc.username=sonaruser
 sonar.jdbc.password=sonarpass
 sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonardb
 sonar.web.javaAdditionalOpts=-server
+sonar.web.host=0.0.0.0
+sonar.web.port=9000
 EOT
 
-# Start PostgreSQL and SonarQube
+# Increase system limits for SonarQube
+sysctl -w vm.max_map_count=262144
+sysctl -w fs.file-max=65536
+ulimit -n 65536
+ulimit -u 4096
+
+# Start PostgreSQL and SonarQube services
 systemctl enable postgresql
 systemctl start postgresql
-
-su - sonarqube -c "/opt/sonarqube/bin/linux-x86-64/sonar.sh start"
 
 # Ensure SonarQube starts on boot
 cat <<EOT >> /etc/systemd/system/sonarqube.service
@@ -47,8 +52,15 @@ User=sonarqube
 Group=sonarqube
 Restart=always
 
+LimitNOFILE=65536
+LimitNPROC=4096
+
 [Install]
 WantedBy=multi-user.target
 EOT
 
 systemctl enable sonarqube
+
+# Ensure port 9000 is open
+ufw allow 9000/tcp
+
