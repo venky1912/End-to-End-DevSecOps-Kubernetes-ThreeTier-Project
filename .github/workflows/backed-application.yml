@@ -45,7 +45,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14'  # Match the Node.js version in the Dockerfile
+          node-version: '20'  # Match the Node.js version in the Dockerfile
 
       # Step 3: Cache node_modules (optional, but can speed up builds)
       - name: Cache node_modules
@@ -70,7 +70,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./Application-Code/backend
+        working-directory: ./Application-Code/backend/
 
     steps:
       - name: Checkout code from GitHub
@@ -96,6 +96,12 @@ jobs:
 
       - name: Install SonarQube Scanner
         run: npm install -g sonar-scanner
+
+      - name: Build with Maven and SonarQube Analysis
+        run: mvn -X sonar:sonar -DskipTests=true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       # Step 6: SonarQube Analysis
       - name: SonarQube Analysis
