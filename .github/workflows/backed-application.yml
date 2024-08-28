@@ -279,10 +279,13 @@ jobs:
           token: ${{ secrets.GH_PAT }}
           path: K8s-Manifests-file/Backend
 
+
+      - name: List directory contents
+        run: ls -al
+
         # Extract the current image tag from deployment.yml
       - name: Update image tag in Kubernetes deployment.yml
         run: |
-          cd K8s-Manifests-file/Backend
 
           imageTag=$(grep -oP '(?<=image: ).*' deployment.yml)
         
