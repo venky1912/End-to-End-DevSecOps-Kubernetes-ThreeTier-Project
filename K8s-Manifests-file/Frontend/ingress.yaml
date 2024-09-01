@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: venkydevops.study
+    - host: mernapplication.com # Change as per your domain
       http:
         paths:
           - path: /api

@@ -132,13 +132,14 @@ jobs:
       working-directory: eks
       run: terraform plan -var-file=${{ github.ref == 'refs/heads/main' && 'prod.tfvars' || github.ref == 'refs/heads/staging' && 'staging.tfvars' || 'dev.tfvars' }} -input=false
     
-    # - name: Terraform Action
-    #   if: ${{ github.event_name == 'push' || github.event.inputs.action == 'apply' }}
-    #   working-directory: eks
-    #   run: terraform apply -auto-approve -var-file=${{ github.ref == 'refs/heads/main' && 'prod.tfvars' || github.ref == 'refs/heads/staging' && 'staging.tfvars' || 'dev.tfvars' }} -input=false
+    - name: Terraform Actions
+      if: ${{ github.event.inputs.action == 'apply' }}
+      #if: ${{ github.event_name == 'push' || github.event.inputs.action == 'apply' }}  # Uncomment when you would like to deploy the Infrastructure
+      working-directory: eks
+      run: terraform apply -auto-approve -var-file=${{ github.ref == 'refs/heads/main' && 'prod.tfvars' || github.ref == 'refs/heads/staging' && 'staging.tfvars' || 'dev.tfvars' }} -input=false
 
     - name: Terraform Destroy
-      #if: ${{ github.event.inputs.action == 'destroy' }}
-      if: ${{ github.event_name == 'push' || github.event.inputs.action == 'destroy' }}
+      if: ${{ github.event.inputs.action == 'destroy' }}
+      #if: ${{ github.event_name == 'push' || github.event.inputs.action == 'destroy' }} # Uncomment when you want to destroy the Resources
       working-directory: eks
       run: terraform destroy -auto-approve -var-file=${{ github.ref == 'refs/heads/main' && 'prod.tfvars' || github.ref == 'refs/heads/staging' && 'staging.tfvars' || 'dev.tfvars' }} -input=false
