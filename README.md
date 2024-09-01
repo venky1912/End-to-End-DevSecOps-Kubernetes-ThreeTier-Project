@@ -286,7 +286,7 @@ In this comprehensive DevSecOps Kubernetes project, we successfully:
 - Created Github Action pipelines for CI/CD, deploying a three-tier architecture application.
 - Ensured data persistence with persistent volumes and claims.
 
-Stay connected on LinkedIn: LinkedIn Profile
-Stay up-to-date with GitHub: GitHub Profile
+Stay connected on LinkedIn: [LinkedIn Profile](https://www.linkedin.com/in/venkateswarareddy-sanikommu-01278a77/)
+Stay up-to-date with GitHub: [GitHub Profile](https://github.com/venky1912)
 Feel free to reach out to me, if you have any other queries.
 Happy to Connect
