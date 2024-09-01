@@ -178,7 +178,7 @@ This section provides a high-level overview of the CI/CD pipeline used in this p
 
 ## **Infrastructure as Code (IaC):Terraform**
 ```bash
-   https://github.com/venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project/blob/main/.github/workflows/eks-terraform.yml
+   https://github.com/venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project/.github/workflows/eks-terraform.yml
 ```
 
 
@@ -191,9 +191,9 @@ This section provides a high-level overview of the CI/CD pipeline used in this p
 
 ## **Application workflow Yaml Files** 
 ```bash
-https://github.com/venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project/blob/main/.github/workflows/backed-application.yml
+https://github.com/venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project/.github/workflows/backed-application.yml
 
-https://github.com/venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project/blob/main/.github/workflows/frontend-application.yml
+https://github.com/venky1912/End-to-End-DevSecOps-Kubernetes-ThreeTier-Project/.github/workflows/frontend-application.yml
 ```
 
 ### 🚀 **Continuous Delivery**
